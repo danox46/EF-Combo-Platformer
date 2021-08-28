@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SBIdleState : ISweepbotInterface
 {
     private float idleDuration = 2.5f;
@@ -40,19 +41,17 @@ public class SBIdleState : ISweepbotInterface
     private void Idle()
     {
 
-        sweepbot.Move(1f, false, false);
+        //sweepbot.Move(1f, false, false);
 
-        
 
-        /*if (idleTimer >= idleDuration)
+        if ((idleTimer >= idleDuration) && (sweepbot.target != null))
         {
-            kolo.ChangeState(new PatrolState());
+            if(sweepbot.target.gameObject.layer == 6)
+                sweepbot.ChangeState(new SBChaseState());
+
         }
 
-        if (kolo.target != null)
-        {
-            kolo.ChangeState(new ChaseState());
-        }*/
+        
     }
 
 

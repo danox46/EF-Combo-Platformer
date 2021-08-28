@@ -10,6 +10,8 @@ public class Idle_beh : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.GetComponent<PlatformerCharacter2D>().attaking = false;
+        animator.GetComponent<PlatformerCharacter2D>().StopChar();
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

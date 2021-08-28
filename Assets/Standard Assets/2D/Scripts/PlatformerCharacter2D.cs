@@ -17,17 +17,21 @@ namespace UnityStandardAssets._2D
         private bool m_Grounded;            // Whether or not the player is grounded.
         private Transform m_CeilingCheck;   // A position marking where to check for ceilings
         const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
-        private Animator m_Anim;            // Reference to the player's animator component.
+        protected Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
-        private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+        protected bool m_FacingRight = true;  // For determining which way the player is currently facing.
 
         [SerializeField] private bool comboWindow;
         [SerializeField] public bool attaking;
         [SerializeField] public bool combo1;
 
         [SerializeField] private float maxHp;
-        [SerializeField] private float currentHp;
+        [SerializeField] protected float currentHp;
+
+        public float CurrentHP { get => currentHp; }
+
         [SerializeField] private float armor;
+        [SerializeField] private Vector2[] attackPush;
 
         public virtual void Start()
         {
@@ -36,7 +40,10 @@ namespace UnityStandardAssets._2D
 
         public virtual void Update()
         {
-
+            if(currentHp <= 0)
+            {
+                Die();
+            }
         }
 
 
@@ -78,7 +85,7 @@ namespace UnityStandardAssets._2D
         }
 
 
-        public void Move(float move, bool crouch, bool jump)
+        public virtual void Move(float move, bool crouch, bool jump)
         {
             /*
             // If crouching, check to see if the character can stand up
@@ -126,28 +133,32 @@ namespace UnityStandardAssets._2D
             }
             */
 
-            if (!attaking && m_Grounded)
+
+            if (!attaking)
             {
-                if (move != 0)
+                if (m_Grounded || m_AirControl)
                 {
-                    m_Anim.SetBool("Walking", true);
-                }
-                else
-                {
-                    m_Anim.SetBool("Walking", false);
-                }
+                    if (move != 0)
+                    {
+                        m_Anim.SetBool("Walking", true);
+                    }
+                    else
+                    {
+                        m_Anim.SetBool("Walking", false);
+                    }
 
 
-                if (move > 0 && !m_FacingRight)
-                {
-                    // ... flip the player.
-                    Flip();
-                }
-                // Otherwise if the input is moving the player left and the player is facing right...
-                else if (move < 0 && m_FacingRight)
-                {
-                    // ... flip the player.
-                    Flip();
+                    if (move > 0 && !m_FacingRight)
+                    {
+                        // ... flip the player.
+                        Flip();
+                    }
+                    // Otherwise if the input is moving the player left and the player is facing right...
+                    else if (move < 0 && m_FacingRight)
+                    {
+                        // ... flip the player.
+                        Flip();
+                    }
                 }
 
             }
@@ -196,17 +207,7 @@ namespace UnityStandardAssets._2D
             return comboWindow;
         }
 
-        public void TriggerCombo()
-        {
-            if (comboWindow)
-            {
-                if (!combo1)
-                {
-                    m_Anim.SetTrigger("Combo1");
-                }
-
-            }
-        }
+      
 
         public void StopChar()
         {
@@ -232,18 +233,43 @@ namespace UnityStandardAssets._2D
             GetComponentInChildren<AoE>().ClearHits();
         }
 
-        public void TriggerAttacking()
+        public virtual void TriggerAttacking()
         {
+
+            GetComponentInChildren<AoE>().pushVector = new Vector2(transform.localScale.x * attackPush[0].x, 1f * attackPush[0].y);
+
             if (!attaking && !comboWindow)
             {
-                //Debug.Log("Kolo triggers the attack");
                 m_Anim.SetTrigger("Attacking");
+            }
+        }
+
+        public void TriggerCombo()
+        {
+            if (comboWindow)
+            {
+                if (!combo1)
+                {
+                    m_Anim.SetTrigger("Combo1");
+                }
+
             }
         }
 
         public void GetDamage(float currentDamage)
         {
             currentHp -= currentDamage - armor;
+        }
+
+        public virtual void Die()
+        {
+            
+
+            gameObject.layer = 3;
+            m_Anim.SetBool("Walking", false);
+            //Change this for trigger the dead animation
+            transform.rotation = new Quaternion(0,0,90,0);
+
         }
     }
 }

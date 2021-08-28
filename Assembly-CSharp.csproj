@@ -54,13 +54,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
+    <Compile Include="Assets\CodeTimeExpiredBeh.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
+    <Compile Include="Assets\CodeFailBeh.cs" />
     <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
+    <Compile Include="Assets\ChangingColorBeh.cs" />
     <Compile Include="Assets\Idle_beh.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\Warrior free set\License.txt" />
-    <None Include="Assets\Warrior free set\Contact.txt" />
+    <Compile Include="Assets\AttackBeh.cs" />
+    <Compile Include="Assets\IdleBeh.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
